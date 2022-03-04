@@ -24,7 +24,7 @@ func ToFrame(topic string, messages []mqtt.Message) *data.Frame {
 	timeField := data.NewFieldFromFieldType(data.FieldTypeTime, count)
 	timeField.Name = "Time"
 	valueField := data.NewFieldFromFieldType(data.FieldTypeFloat64, count)
-	valueField.Name = "Value"
+	valueField.Name = topic
 
 	for idx, m := range messages {
 		if value, err := strconv.ParseFloat(m.Value, 64); err == nil {

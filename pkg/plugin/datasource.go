@@ -49,6 +49,7 @@ type MQTTClient interface {
 	Messages(topic string) ([]mqtt.Message, bool)
 	Subscribe(topic string)
 	Unsubscribe(topic string)
+	Dispose()
 }
 
 type MQTTDatasource struct {
@@ -79,7 +80,7 @@ func NewMQTTDatasource(client MQTTClient, uid string) *MQTTDatasource {
 // by SDK old datasource instance will be disposed and a new one will be created
 // using NewMQTTDatasource factory function.
 func (ds *MQTTDatasource) Dispose() {
-	// Nothing to clean up yet.
+	ds.Client.Dispose()
 }
 
 func (ds *MQTTDatasource) QueryData(_ context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
@@ -114,16 +115,18 @@ func (ds *MQTTDatasource) SubscribeStream(_ context.Context, req *backend.Subscr
 }
 
 func (ds *MQTTDatasource) RunStream(ctx context.Context, req *backend.RunStreamRequest, sender *backend.StreamSender) error {
+	backend.Logger.Info(fmt.Sprintf("start streaming %s", req.Path))
 	ds.Client.Subscribe(req.Path)
 	defer ds.Client.Unsubscribe(req.Path)
 
 	for {
 		select {
 		case <-ctx.Done():
-			backend.Logger.Info("stop streaming (context canceled)")
+			backend.Logger.Info(fmt.Sprintf("stop streaming %s (context canceled)", req.Path))
 			return nil
 		case message := <-ds.Client.Stream():
 			if message.Topic != req.Path {
+				ds.Client.Stream() <- message // someone else might be interested
 				continue
 			}
 			err := ds.SendMessage(message, req, sender)

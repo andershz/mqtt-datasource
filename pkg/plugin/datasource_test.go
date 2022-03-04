@@ -66,3 +66,5 @@ func (c *fakeMQTTClient) Stream() chan mqtt.StreamMessage {
 func (c *fakeMQTTClient) Subscribe(_ string) {}
 
 func (c *fakeMQTTClient) Unsubscribe(_ string) {}
+
+func (c *fakeMQTTClient) Dispose() {}
