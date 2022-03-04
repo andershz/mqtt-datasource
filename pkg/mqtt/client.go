@@ -116,6 +116,9 @@ func (c *Client) HandleMessage(_ paho.Client, msg paho.Message) {
 }
 
 func (c *Client) Subscribe(t string) {
+	if t == "" {
+		return
+	}
 	if _, ok := c.topics.Load(t); ok {
 		return
 	}
