@@ -21,7 +21,7 @@ export const QueryEditor = (props: Props) => {
             value={query.queryText}
             css=""
             autoComplete="off"
-            onChange={handleEvent('queryText')}
+            onBlur={handleEvent('queryText')}
           />
         </Field>
       )}

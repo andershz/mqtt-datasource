@@ -1,11 +1,11 @@
-import { ChangeEvent } from 'react';
+import { FocusEvent } from 'react';
 import { handlerFactory } from './handleEvent';
 
 const changeEvent = {
   currentTarget: {
     value: 'test',
   },
-} as ChangeEvent<HTMLInputElement>;
+} as FocusEvent<HTMLInputElement>;
 
 describe('handlerFactory', () => {
   it('returns value from event', () => {
