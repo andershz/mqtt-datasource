@@ -27,6 +27,11 @@ The MQTT data source has the following requirements:
     ...
 }
 ```
+In addition also a simple numerical value is supported:
+```
+1.0
+```
+
 We do plan to support more complex JSON data structures in the upcoming releases. Contributions are highly encouraged!
 - This plugin currently attaches timestamps to the messages when they are received, so there is no way to have custom timestamp for messages.
 ## Install the plugin
